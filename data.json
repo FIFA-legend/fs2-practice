@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Nikita",
+    "surname": "Kolodko",
+    "car": {
+      "brand": "Porsche",
+      "model": "Panamera",
+      "year": 2020
+    }
+  },
+  {
+    "name": "Default",
+    "surname": "Person",
+    "car": {
+      "brand": "Audi",
+      "model": "A4",
+      "year": 2019
+    }
+  }
+]
