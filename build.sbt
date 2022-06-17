@@ -19,5 +19,8 @@ libraryDependencies ++= Seq(
   "org.neo4j.driver" % "neo4j-java-driver" % "4.4.6",
   "io.github.neotypes" %% "neotypes-core" % neo4jVersion,
   "io.github.neotypes" %% "neotypes-cats-effect" % neo4jVersion,
-  "io.github.neotypes" %% "neotypes-fs2-stream" % neo4jVersion
+  "io.github.neotypes" %% "neotypes-fs2-stream" % neo4jVersion,
+
+  // faker
+  "com.github.javafaker" % "javafaker" % "1.0.2"
 )

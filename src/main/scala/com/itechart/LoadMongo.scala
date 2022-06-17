@@ -1,31 +1,29 @@
 package com.itechart
 
-import cats.effect.IO
-import cats.effect.unsafe.implicits.global
+import cats.effect.{IO, IOApp}
+import com.github.javafaker.Faker
 import com.itechart.Main.{Car, Person}
 import com.itechart.util.MongoClientImpl
 import com.mongodb.async.SingleResultCallback
 import fs2.Stream
 import org.bson.Document
 
-import scala.util.Random
+object LoadMongo extends IOApp.Simple {
 
-object LoadMongo extends App {
+  val faker = new Faker()
 
   val mongoHost = "localhost"
   val mongoPort = 27017
   val mongoUser = "root"
   val mongoPassword = "0987654321KnKn"
 
-  val random = new Random
-
   val persons: List[Person] = for {
     i <- (1 to 10_000).toList
-    name = s"Name$i"
-    surname = s"Surname$i"
+    name = faker.name().firstName()
+    surname = faker.name().lastName()
     brand = s"Brand$i"
     model = s"Model$i"
-    year = 1970 + random.nextInt(50)
+    year = faker.random().nextInt(1970, 2020)
   } yield Person(name, surname, Car(brand, model, year))
 
   val mongoUrl = s"mongodb://$mongoUser:$mongoPassword@$mongoHost:$mongoPort"
@@ -44,15 +42,14 @@ object LoadMongo extends App {
       _ <- Stream.emit(collection.insertOne(personDocument, callback))
     } yield ()
 
-  program.compile.drain.unsafeRunSync()
-
   def callback[A]: SingleResultCallback[A] = {
     (result: A, throwable: Throwable) => {
       (Option(result), Option(throwable)) match {
         case (_, Some(t)) => println(s"Some error happened: ${t.getMessage}")
-        case (r, None) => println("Document saved successfully")
+        case (r, None) => println(s"Document ${r.toString} saved successfully")
       }
     }
   }
 
+  override def run: IO[Unit] = program.compile.drain
 }

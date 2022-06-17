@@ -1,5 +1,8 @@
 # Fs2 practice
 
+## Goal
+The main goal of this project is transferring data from MongoDB to Neo4j with the help of Stream from fs2 library.
+
 ## Run containers
 
 ```bash

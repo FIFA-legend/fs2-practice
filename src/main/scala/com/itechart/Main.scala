@@ -1,7 +1,7 @@
 package com.itechart
 
 import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, Resource}
+import cats.effect.{IO, IOApp, Resource}
 import com.itechart.util.MongoClientImpl
 import com.itechart.util.imports._
 import fs2.Stream
@@ -13,7 +13,7 @@ import neotypes.{GraphDatabase, StreamingDriver}
 import org.bson.Document
 import org.neo4j.driver.AuthTokens
 
-object Main extends App {
+object Main extends IOApp.Simple {
 
   val mongoHost = "localhost"
   val mongoPort = 27017
@@ -43,8 +43,6 @@ object Main extends App {
       year = carDocument.get("year", classOf[Integer])
     } yield Person(name, surname, Car(brand, model, year))
 
-  allPersons.evalMap(d => IO(println(d))).compile.drain.unsafeRunSync()
-
   /*val persons: Stream[IO, Person] = Stream(
     Person("Nikita", "Kolodko", Car("Porsche", "Panamera", 2020)),
     Person("Default", "Person", Car("Audi", "A4", 2019))
@@ -60,5 +58,5 @@ object Main extends App {
       .query[Unit].stream(dr)
   } yield ()
 
-  program.compile.drain.unsafeRunSync()
+  override def run: IO[Unit] = program.compile.drain
 }
